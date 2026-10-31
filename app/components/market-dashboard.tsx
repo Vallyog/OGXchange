@@ -169,12 +169,11 @@ export default function MarketDashboard() {
         <nav className="rates-nav" aria-label="Main navigation">
           <a className="rates-nav-active" href="#rates">Rates</a>
           <a href="#converter">Convert</a>
-          <a href="#contact">Contact Us</a>
+          
         </nav>
-        <span className="rates-live-label">
-          <i className={market ? "is-live" : ""} />
-          {market ? "Market data" : "Connecting"}
-        </span>
+        <a className="rates-live-label" href="#contact">
+          Contact Us
+        </a>
       </header>
 
       <section className="rates-hero">

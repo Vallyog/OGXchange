@@ -322,24 +322,24 @@ button:focus-visible, a:focus-visible, input:focus-visible, select:focus-visible
 .back-to-top {
   position: fixed;
   z-index: 10;
-  right: max(24px, calc((100vw - 1120px) / 2));
-  bottom: max(24px, env(safe-area-inset-bottom));
+  right: max(20px, env(safe-area-inset-right));
+  bottom: max(20px, env(safe-area-inset-bottom));
   width: 42px;
   height: 42px;
   display: grid;
   place-items: center;
-  border: 1px solid rgba(255, 255, 255, .75);
+  border: 1px solid rgba(255,255,255,.7);
   border-radius: 50%;
   color: #fff;
   background: var(--brand);
-  box-shadow: 0 5px 16px rgba(27, 55, 173, .25);
-  transition: background .18s ease, box-shadow .18s ease, transform .18s ease;
+  box-shadow: 0 5px 16px rgba(28, 54, 150, .24);
+  transition: background .18s ease, transform .18s ease, box-shadow .18s ease;
 }
 .back-to-top svg { width: 19px; height: 19px; }
 .back-to-top:hover {
   transform: translateY(-2px);
   background: var(--brand-dark);
-  box-shadow: 0 7px 20px rgba(27, 55, 173, .3);
+  box-shadow: 0 8px 20px rgba(28, 54, 150, .3);
 }
 
 @media (max-width: 760px) {
@@ -404,7 +404,7 @@ button:focus-visible, a:focus-visible, input:focus-visible, select:focus-visible
   .table-convert-button { grid-column: 2; grid-row: 2; min-width: 70px; padding: 6px 7px; }
   .market-disclaimer { font-size: 9px; }
   .rates-footer { min-height: 73px; align-items: flex-start; justify-content: center; flex-direction: column; gap: 6px; font-size: 9px; }
-  .back-to-top { right: 16px; bottom: max(16px, env(safe-area-inset-bottom)); width: 40px; height: 40px; }
+  .back-to-top { right: max(14px, env(safe-area-inset-right)); bottom: max(14px, env(safe-area-inset-bottom)); width: 39px; height: 39px; }
 }
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { scroll-behavior: auto !important; transition-duration: .01ms !important; animation-duration: .01ms !important; }
