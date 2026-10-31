@@ -22,6 +22,12 @@ function formatNaira(value: number) {
   return nairaFormatter.format(value);
 }
 
+function formatCrypto(value: number, symbol: string) {
+  const maximumFractionDigits =
+    symbol === "BTC" ? 8 : symbol === "ETH" ? 6 : 2;
+  return `${new Intl.NumberFormat("en-US", { maximumFractionDigits }).format(value)} ${symbol}`;
+}
+
 function isMarketRatesResponse(value: unknown): value is MarketRatesResponse {
   if (
     typeof value !== "object" ||
@@ -67,6 +73,9 @@ function isMarketAssetSymbol(
 export default function MarketDashboard() {
   const [market, setMarket] = useState<MarketRatesResponse | null>(null);
   const [amount, setAmount] = useState("1");
+  const [conversionDirection, setConversionDirection] = useState<
+    "crypto-to-naira" | "naira-to-crypto"
+  >("crypto-to-naira");
   const [selectedSymbol, setSelectedSymbol] =
     useState<(typeof marketAssets)[number]["symbol"]>("BTC");
   const [search, setSearch] = useState("");
@@ -135,11 +144,18 @@ export default function MarketDashboard() {
   const parsedAmount = Number(amount);
   const convertedAmount =
     selectedRate && Number.isFinite(parsedAmount) && parsedAmount > 0
-      ? formatNaira(parsedAmount * selectedRate.priceNgn)
+      ? conversionDirection === "crypto-to-naira"
+        ? formatNaira(parsedAmount * selectedRate.priceNgn)
+        : formatCrypto(parsedAmount / selectedRate.priceNgn, selectedSymbol)
       : "—";
+  const rateDescription = selectedRate
+    ? conversionDirection === "crypto-to-naira"
+      ? `Rate: ${formatNaira(selectedRate.priceNgn)} / ${selectedSymbol}`
+      : `Rate: 1 ${selectedSymbol} = ${formatNaira(selectedRate.priceNgn)}`
+    : "Waiting for live rate";
 
   return (
-    <main className="rates-page">
+    <main className="rates-page" id="top">
       <header className="rates-header">
         <Link className="rates-brand" href="/" aria-label="Ogxchange home">
           <Image
@@ -181,7 +197,7 @@ export default function MarketDashboard() {
         </div>
         <div className="converter-controls">
           <label className="converter-input">
-            <span>Crypto amount</span>
+            <span>{conversionDirection === "crypto-to-naira" ? "Crypto amount" : "Naira amount"}</span>
             <div className="converter-field">
               <input
                 type="number"
@@ -190,8 +206,11 @@ export default function MarketDashboard() {
                 inputMode="decimal"
                 value={amount}
                 onChange={(event) => setAmount(event.target.value)}
-                aria-label="Crypto amount to convert"
+                aria-label={conversionDirection === "crypto-to-naira" ? "Crypto amount to convert" : "Naira amount to convert"}
               />
+              {conversionDirection === "naira-to-crypto" && (
+                <span className="converter-currency">₦ NGN</span>
+              )}
               <select
                 value={selectedSymbol}
                 onChange={(event) => {
@@ -209,10 +228,29 @@ export default function MarketDashboard() {
               </select>
             </div>
           </label>
+          <button
+            className="converter-swap"
+            type="button"
+            onClick={() =>
+              setConversionDirection((direction) =>
+                direction === "crypto-to-naira"
+                  ? "naira-to-crypto"
+                  : "crypto-to-naira",
+              )
+            }
+            aria-label={
+              conversionDirection === "crypto-to-naira"
+                ? "Switch to naira-to-crypto conversion"
+                : "Switch to crypto-to-naira conversion"
+            }
+            title="Switch conversion direction"
+          >
+            ⇄
+          </button>
           <div className="converter-result" aria-live="polite">
-            <span>Naira value</span>
+            <span>{conversionDirection === "crypto-to-naira" ? "Naira value" : "Crypto value"}</span>
             <strong>{convertedAmount}</strong>
-            <small>{selectedRate ? `Rate: ${formatNaira(selectedRate.priceNgn)} / ${selectedSymbol}` : "Waiting for live rate"}</small>
+            <small>{rateDescription}</small>
           </div>
         </div>
       </section>
@@ -364,6 +402,11 @@ export default function MarketDashboard() {
         <span>© 2026 Ogxchange</span>
         <span>Market data· For information only</span>
       </footer>
+      <a className="back-to-top" href="#top" aria-label="Back to top" title="Back to top">
+        <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
+          <path d="M12 19V5m-6 6 6-6 6 6" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" />
+        </svg>
+      </a>
     </main>
   );
 }

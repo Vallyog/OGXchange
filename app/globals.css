@@ -139,7 +139,7 @@ button:focus-visible, a:focus-visible, input:focus-visible, select:focus-visible
   letter-spacing: -.045em;
 }
 .converter-intro p { margin: 0; color: var(--muted); font-size: 12px; line-height: 1.65; }
-.converter-controls { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
+.converter-controls { display: grid; grid-template-columns: minmax(0, 1fr) 34px minmax(0, 1fr); gap: 12px; align-items: center; }
 .converter-input, .converter-result { min-width: 0; }
 .converter-input > span, .converter-result > span { display: block; margin-bottom: 8px; color: #68748e; font-size: 11px; font-weight: 600; }
 .converter-field {
@@ -167,6 +167,25 @@ button:focus-visible, a:focus-visible, input:focus-visible, select:focus-visible
 .converter-field input::-webkit-inner-spin-button, .converter-field input::-webkit-outer-spin-button { appearance: none; margin: 0; }
 .converter-field input[type=number] { appearance: textfield; }
 .converter-field select { border: 0; outline: 0; color: #3d4d7b; background: transparent; font-size: 12px; font-weight: 700; cursor: pointer; }
+.converter-currency { flex: 0 0 auto; color: #3d4d7b; font-size: 11px; font-weight: 700; white-space: nowrap; }
+.converter-swap {
+  position: relative;
+  top: 20px;
+  width: 34px;
+  height: 34px;
+  display: grid;
+  place-self: center;
+  place-items: center;
+  margin-top: 24px;
+  border: 1px solid #e1e6f3;
+  border-radius: 50%;
+  color: #2848bb;
+  background: #f8f9ff;
+  font-size: 18px;
+  cursor: pointer;
+  transition: background .16s ease, transform .16s ease;
+}
+.converter-swap:hover { transform: rotate(180deg); background: #eff2ff; }
 .converter-result {
   min-height: 75px;
   padding: 9px 13px;
@@ -300,6 +319,28 @@ button:focus-visible, a:focus-visible, input:focus-visible, select:focus-visible
   color: #8a95ac;
   font-size: 10px;
 }
+.back-to-top {
+  position: fixed;
+  z-index: 10;
+  right: max(24px, calc((100vw - 1120px) / 2));
+  bottom: max(24px, env(safe-area-inset-bottom));
+  width: 42px;
+  height: 42px;
+  display: grid;
+  place-items: center;
+  border: 1px solid rgba(255, 255, 255, .75);
+  border-radius: 50%;
+  color: #fff;
+  background: var(--brand);
+  box-shadow: 0 5px 16px rgba(27, 55, 173, .25);
+  transition: background .18s ease, box-shadow .18s ease, transform .18s ease;
+}
+.back-to-top svg { width: 19px; height: 19px; }
+.back-to-top:hover {
+  transform: translateY(-2px);
+  background: var(--brand-dark);
+  box-shadow: 0 7px 20px rgba(27, 55, 173, .3);
+}
 
 @media (max-width: 760px) {
   .rates-page { width: min(100% - 32px, 600px); }
@@ -331,10 +372,12 @@ button:focus-visible, a:focus-visible, input:focus-visible, select:focus-visible
   .contact-panel { gap: 17px; margin-top: 16px; padding: 20px 17px; }
   .contact-details { grid-template-columns: 1fr; gap: 8px; }
   .contact-detail { padding: 11px; }
-  .converter-controls { grid-template-columns: 1fr 1fr; gap: 9px; }
+  .converter-controls { grid-template-columns: minmax(0, 1fr) 30px minmax(0, 1fr); gap: 7px; }
   .converter-field { gap: 5px; padding: 0 9px; }
   .converter-field input { font-size: 15px; }
   .converter-field select { font-size: 10px; }
+  .converter-currency { font-size: 9px; }
+  .converter-swap { width: 30px; height: 30px; margin-top: 24px; }
   .converter-result { padding: 9px; }
   .converter-result strong { font-size: 16px; }
   .market-panel { margin-top: 16px; padding: 21px 16px 16px; }
@@ -361,6 +404,7 @@ button:focus-visible, a:focus-visible, input:focus-visible, select:focus-visible
   .table-convert-button { grid-column: 2; grid-row: 2; min-width: 70px; padding: 6px 7px; }
   .market-disclaimer { font-size: 9px; }
   .rates-footer { min-height: 73px; align-items: flex-start; justify-content: center; flex-direction: column; gap: 6px; font-size: 9px; }
+  .back-to-top { right: 16px; bottom: max(16px, env(safe-area-inset-bottom)); width: 40px; height: 40px; }
 }
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { scroll-behavior: auto !important; transition-duration: .01ms !important; animation-duration: .01ms !important; }
