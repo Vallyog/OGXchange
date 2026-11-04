@@ -258,6 +258,10 @@ button:focus-visible, a:focus-visible, input:focus-visible, select:focus-visible
 .coin-orange { color: #a86e26; background: #fff0d9; }
 .coin-blue { color: #536da9; background: #e8edfb; }
 .coin-green { color: #338261; background: #e2f2e8; }
+.coin-yellow { color: #9c7920; background: #faf1d5; }
+.coin-gray { color: #536072; background: #e9edf2; }
+.coin-purple { color: #6352a5; background: #eeeafb; }
+.coin-red { color: #bc4855; background: #fbe8eb; }
 .market-asset strong, .market-asset small { display: block; }
 .market-asset strong { color: #34415f; font-size: 12px; font-weight: 650; }
 .market-asset small { margin-top: 4px; color: #8c98ad; font-size: 10px; }
@@ -319,6 +323,28 @@ button:focus-visible, a:focus-visible, input:focus-visible, select:focus-visible
   color: #8a95ac;
   font-size: 10px;
 }
+.rates-footer-links { display: flex; align-items: center; gap: 20px; }
+.rates-footer-links a { color: #53648f; }
+.rates-footer-links a:hover { color: var(--brand); }
+.privacy-page { padding-bottom: 12px; }
+.privacy-content {
+  max-width: 800px;
+  margin: 34px auto 0;
+  padding: 38px 44px;
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  background: #fff;
+}
+.privacy-heading { margin-bottom: 30px; padding-bottom: 24px; border-bottom: 1px solid var(--line); }
+.privacy-heading h1 { margin: 10px 0 8px; color: #1d2d55; font-size: clamp(34px, 5vw, 46px); font-weight: 550; letter-spacing: -.055em; }
+.privacy-heading p, .privacy-section p, .privacy-section li { color: #68748e; font-size: 13px; line-height: 1.8; }
+.privacy-heading p { margin: 0; }
+.privacy-section + .privacy-section { margin-top: 25px; }
+.privacy-section h2 { margin: 0 0 8px; color: #253352; font-size: 17px; font-weight: 650; letter-spacing: -.025em; }
+.privacy-section p { margin: 0; }
+.privacy-section ul { margin: 8px 0 0; padding-left: 21px; }
+.privacy-section li + li { margin-top: 5px; }
+.privacy-section a { color: var(--brand-dark); text-decoration: underline; text-underline-offset: 3px; }
 .back-to-top {
   position: fixed;
   z-index: 10;
@@ -404,6 +430,11 @@ button:focus-visible, a:focus-visible, input:focus-visible, select:focus-visible
   .table-convert-button { grid-column: 2; grid-row: 2; min-width: 70px; padding: 6px 7px; }
   .market-disclaimer { font-size: 9px; }
   .rates-footer { min-height: 73px; align-items: flex-start; justify-content: center; flex-direction: column; gap: 6px; font-size: 9px; }
+  .rates-footer-links { flex-wrap: wrap; gap: 6px 15px; }
+  .privacy-content { margin-top: 20px; padding: 26px 20px; }
+  .privacy-section + .privacy-section { margin-top: 21px; }
+  .privacy-section h2 { font-size: 16px; }
+  .privacy-heading p, .privacy-section p, .privacy-section li { font-size: 12px; }
   .back-to-top { right: max(14px, env(safe-area-inset-right)); bottom: max(14px, env(safe-area-inset-bottom)); width: 39px; height: 39px; }
 }
 @media (prefers-reduced-motion: reduce) {

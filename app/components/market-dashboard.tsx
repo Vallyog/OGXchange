@@ -24,7 +24,7 @@ function formatNaira(value: number) {
 
 function formatCrypto(value: number, symbol: string) {
   const maximumFractionDigits =
-    symbol === "BTC" ? 8 : symbol === "ETH" ? 6 : 2;
+    symbol === "BTC" ? 8 : symbol === "USDT" || symbol === "USDC" ? 2 : 6;
   return `${new Intl.NumberFormat("en-US", { maximumFractionDigits }).format(value)} ${symbol}`;
 }
 
@@ -399,7 +399,10 @@ export default function MarketDashboard() {
 
       <footer className="rates-footer">
         <span>© 2026 Ogxchange</span>
-        <span>Market data· For information only</span>
+        <div className="rates-footer-links">
+          <Link href="/privacy-policy">Privacy Policy</Link>
+          <span>Market data · For information only</span>
+        </div>
       </footer>
       <a className="back-to-top" href="#top" aria-label="Back to top" title="Back to top">
         <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">

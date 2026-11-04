@@ -22,6 +22,55 @@ export const marketAssets = [
     tone: "green",
     providerId: "tether",
   },
+  {
+    symbol: "BNB",
+    name: "BNB",
+    mark: "◆",
+    tone: "yellow",
+    providerId: "binancecoin",
+  },
+  {
+    symbol: "XRP",
+    name: "XRP",
+    mark: "✕",
+    tone: "gray",
+    providerId: "ripple",
+  },
+  {
+    symbol: "USDC",
+    name: "USDC",
+    mark: "$",
+    tone: "blue",
+    providerId: "usd-coin",
+  },
+  {
+    symbol: "SOL",
+    name: "Solana",
+    mark: "◎",
+    tone: "purple",
+    providerId: "solana",
+  },
+  {
+    symbol: "TRX",
+    name: "TRON",
+    mark: "T",
+    tone: "red",
+    providerId: "tron",
+  },
+  {
+    symbol: "DOGE",
+    name: "Dogecoin",
+    mark: "Ð",
+    tone: "yellow",
+    providerId: "dogecoin",
+  },
+  {
+    symbol: "ADA",
+    name: "Cardano",
+    mark: "₳",
+    tone: "blue",
+    providerId: "cardano",
+  },
 ] as const;
 
 export type MarketAsset = (typeof marketAssets)[number];

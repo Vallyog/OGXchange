@@ -1,10 +1,10 @@
 # Ogxchange
 
-Ogxchange is a Next.js App Router application for a Nigeria-focused crypto/NGN exchange. The landing page displays read-only CoinGecko market rates in naira for the supported BTC, ETH, and USDT assets, with a conversion estimate and the initial Supabase database/auth foundation.
+Ogxchange is a Next.js App Router application for a Nigeria-focused crypto/NGN exchange. The landing page displays read-only CoinGecko market rates in naira for ten supported assets (BTC, ETH, USDT, BNB, XRP, USDC, SOL, TRX, DOGE, and ADA), with a conversion estimate and the initial Supabase database/auth foundation.
 
 ## Current stage and safety
 
-- Market rates are fetched from CoinGecko for the three assets in the current supported-asset list. Conversion is an indicative estimate only; it does not request or create a quote.
+- Market rates are fetched from CoinGecko for the ten assets in the current supported-asset list. Conversion is an indicative estimate only; it does not request or create a quote.
 - Trading, crypto deposits, customer balances, payouts, and payment confirmations are **not implemented or enabled**. No successful transaction is simulated.
 - The database seeds disabled asset/network metadata only. Rates are unset and all trading flags default to `false`.
 - Supabase browser and server clients use the public anon key and rely on database row-level security. The service-role key is for future server-only operations and must never be exposed to a browser.
