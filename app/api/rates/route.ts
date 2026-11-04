@@ -56,6 +56,7 @@ export async function GET() {
         name: asset.name,
         mark: asset.mark,
         tone: asset.tone,
+        marketPriceNgn: priceNgn,
         priceNgn: priceNgn * (1 - MARKET_RATE_DISCOUNT_PERCENT / 100),
         change24h:
           typeof change24h === "number" && Number.isFinite(change24h)

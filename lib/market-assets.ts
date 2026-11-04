@@ -1,4 +1,5 @@
 export const MARKET_RATE_DISCOUNT_PERCENT = 3.33;
+export const NAIRA_TO_CRYPTO_DISCOUNT_PERCENT = 3.5;
 
 export const marketAssets = [
   {
@@ -81,6 +82,7 @@ export type MarketRate = {
   mark: MarketAsset["mark"];
   tone: MarketAsset["tone"];
   priceNgn: number;
+  marketPriceNgn: number;
   change24h: number | null;
 };
 

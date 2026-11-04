@@ -4,6 +4,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import {
+  NAIRA_TO_CRYPTO_DISCOUNT_PERCENT,
   marketAssets,
   type MarketRatesResponse,
 } from "@/lib/market-assets";
@@ -23,8 +24,7 @@ function formatNaira(value: number) {
 }
 
 function formatCrypto(value: number, symbol: string) {
-  const maximumFractionDigits =
-    symbol === "BTC" ? 8 : symbol === "USDT" || symbol === "USDC" ? 2 : 6;
+  const maximumFractionDigits = symbol === "BTC" ? 8 : 6;
   return `${new Intl.NumberFormat("en-US", { maximumFractionDigits }).format(value)} ${symbol}`;
 }
 
@@ -51,6 +51,7 @@ function isMarketRatesResponse(value: unknown): value is MarketRatesResponse {
       "mark" in rate &&
       "tone" in rate &&
       "priceNgn" in rate &&
+      "marketPriceNgn" in rate &&
       "change24h" in rate &&
       typeof rate.symbol === "string" &&
       typeof rate.name === "string" &&
@@ -58,6 +59,8 @@ function isMarketRatesResponse(value: unknown): value is MarketRatesResponse {
       typeof rate.tone === "string" &&
       typeof rate.priceNgn === "number" &&
       Number.isFinite(rate.priceNgn) &&
+      typeof rate.marketPriceNgn === "number" &&
+      Number.isFinite(rate.marketPriceNgn) &&
       (rate.change24h === null ||
         (typeof rate.change24h === "number" &&
           Number.isFinite(rate.change24h))),
@@ -146,12 +149,16 @@ export default function MarketDashboard() {
     selectedRate && Number.isFinite(parsedAmount) && parsedAmount > 0
       ? conversionDirection === "crypto-to-naira"
         ? formatNaira(parsedAmount * selectedRate.priceNgn)
-        : formatCrypto(parsedAmount / selectedRate.priceNgn, selectedSymbol)
+        : formatCrypto(
+            (parsedAmount / selectedRate.marketPriceNgn) *
+              (1 - NAIRA_TO_CRYPTO_DISCOUNT_PERCENT / 100),
+            selectedSymbol,
+          )
       : "—";
   const rateDescription = selectedRate
     ? conversionDirection === "crypto-to-naira"
       ? `Rate: ${formatNaira(selectedRate.priceNgn)} / ${selectedSymbol}`
-      : `Rate: 1 ${selectedSymbol} = ${formatNaira(selectedRate.priceNgn)}`
+      : `Market reference: ${formatNaira(selectedRate.marketPriceNgn)} / ${selectedSymbol}`
     : "Waiting for live rate";
 
   return (
@@ -192,7 +199,7 @@ export default function MarketDashboard() {
         <div className="converter-intro">
           <span className="panel-kicker">QUICK CONVERT</span>
           <h2 id="converter-title">What’s it worth?</h2>
-          <p>Estimate the NGN value using the displayed rate.</p>
+          <p>Confirm current rate here before giving us a call.</p>
         </div>
         <div className="converter-controls">
           <label className="converter-input">
