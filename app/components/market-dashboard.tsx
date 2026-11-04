@@ -82,6 +82,7 @@ export default function MarketDashboard() {
   const [selectedSymbol, setSelectedSymbol] =
     useState<(typeof marketAssets)[number]["symbol"]>("BTC");
   const [search, setSearch] = useState("");
+  const [showAllRates, setShowAllRates] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
   const [isRefreshing, setIsRefreshing] = useState(false);
   const [error, setError] = useState("");
@@ -140,6 +141,10 @@ export default function MarketDashboard() {
         rate.symbol.toLowerCase().includes(query),
     );
   }, [market, search]);
+  const visibleRates =
+    showAllRates || search.trim()
+      ? filteredRates
+      : filteredRates.slice(0, 5);
 
   const selectedRate = market?.rates.find(
     (rate) => rate.symbol === selectedSymbol,
@@ -315,7 +320,7 @@ export default function MarketDashboard() {
             <span role="columnheader">24h change</span>
             <span role="columnheader">Convert</span>
           </div>
-          {filteredRates.map((rate) => (
+          {visibleRates.map((rate) => (
             <div className="market-table-row" role="row" key={rate.symbol}>
               <div className="market-asset" role="cell">
                 <span className={`market-coin coin-${rate.tone}`}>{rate.mark}</span>
@@ -355,6 +360,16 @@ export default function MarketDashboard() {
             <div className="market-empty">Loading supported asset rates…</div>
           )}
         </div>
+        {!search.trim() && filteredRates.length > 5 && (
+          <button
+            className="market-see-more"
+            type="button"
+            onClick={() => setShowAllRates((showAll) => !showAll)}
+            aria-expanded={showAllRates}
+          >
+            {showAllRates ? "See less" : "See more"}
+          </button>
+        )}
 
         <p className="market-disclaimer">
           Market prices are indicative and can change quickly. Conversion is an estimate, not an offer to trade. No trades, deposits, or payouts are available on this page.

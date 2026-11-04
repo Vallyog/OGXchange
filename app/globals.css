@@ -286,6 +286,19 @@ button:focus-visible, a:focus-visible, input:focus-visible, select:focus-visible
 .table-convert-button span { margin-left: 4px; }
 .table-convert-button:hover { border-color: #b9c6ff; background: #eff2ff; }
 .market-empty { padding: 35px 10px; color: #8793aa; text-align: center; font-size: 12px; }
+.market-see-more {
+  display: block;
+  margin: 16px auto 0;
+  padding: 8px 18px;
+  border: 1px solid #e0e6f5;
+  border-radius: 7px;
+  color: #2848bb;
+  background: #f8f9ff;
+  font-size: 11px;
+  font-weight: 650;
+  cursor: pointer;
+}
+.market-see-more:hover { border-color: #b9c6ff; background: #eff2ff; }
 .market-disclaimer { margin: 18px 0 0; color: #8a95ac; font-size: 10px; line-height: 1.6; }
 .contact-panel {
   display: grid;
