@@ -8,6 +8,30 @@
   --brand: #003cff;
   --brand-dark: #1937ad;
   --brand-soft: #eef2ff;
+  --surface: #fff;
+  --surface-strong: #f8f9ff;
+  --surface-soft: #f4f6ff;
+  --panel-text: #253352;
+  --panel-subtle: #68748e;
+  --hero-text: #1d2d55;
+  --shadow: rgba(33, 54, 91, .035);
+}
+
+html[data-theme="dark"] {
+  --background: #091321;
+  --foreground: #edf4ff;
+  --muted: #94a4c7;
+  --line: #1d2d45;
+  --brand: #7d9cff;
+  --brand-dark: #bac8ff;
+  --brand-soft: #121e35;
+  --surface: #101b2d;
+  --surface-strong: #152239;
+  --surface-soft: #0f1b2f;
+  --panel-text: #edf4ff;
+  --panel-subtle: #b3c0d9;
+  --hero-text: #f6f9ff;
+  --shadow: rgba(2, 6, 18, .5);
 }
 
 @theme inline {
@@ -46,6 +70,28 @@ button:focus-visible, a:focus-visible, input:focus-visible, select:focus-visible
   justify-content: space-between;
   border-bottom: 1px solid var(--line);
 }
+.rates-header-actions {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.theme-toggle {
+  height: 36px;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 0 12px;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  color: var(--panel-subtle);
+  background: var(--surface);
+  font-size: 11px;
+  font-weight: 650;
+  cursor: pointer;
+  transition: border-color .16s ease, background .16s ease, transform .16s ease;
+}
+.theme-toggle:hover { transform: translateY(-1px); border-color: #b9c6ff; }
+.theme-toggle span:first-child { font-size: 14px; }
 .rates-brand { display: inline-flex; align-items: center; }
 .rates-brand img { display: block; width: 144px; height: auto; }
 .rates-nav { display: flex; align-items: center; gap: 34px; color: #68748e; font-size: 13px; }
@@ -117,6 +163,162 @@ button:focus-visible, a:focus-visible, input:focus-visible, select:focus-visible
   font-size: 50px;
   font-weight: 450;
   transform: rotate(-7deg);
+}
+
+html[data-theme="dark"] body {
+  background: var(--background);
+  color: var(--foreground);
+}
+
+html[data-theme="dark"] .rates-header,
+html[data-theme="dark"] .rates-live-label,
+html[data-theme="dark"] .rates-hero,
+html[data-theme="dark"] .converter-panel,
+html[data-theme="dark"] .market-panel,
+html[data-theme="dark"] .market-search,
+html[data-theme="dark"] .refresh-button,
+html[data-theme="dark"] .converter-field,
+html[data-theme="dark"] .converter-result,
+html[data-theme="dark"] .contact-panel,
+html[data-theme="dark"] .contact-detail,
+html[data-theme="dark"] .privacy-content,
+html[data-theme="dark"] .theme-toggle,
+html[data-theme="dark"] .market-see-more,
+html[data-theme="dark"] .table-convert-button {
+  background: var(--surface);
+  border-color: var(--line);
+  box-shadow: 0 9px 26px var(--shadow);
+}
+
+html[data-theme="dark"] .rates-header,
+html[data-theme="dark"] .rates-live-label,
+html[data-theme="dark"] .rates-hero,
+html[data-theme="dark"] .converter-panel,
+html[data-theme="dark"] .market-panel,
+html[data-theme="dark"] .contact-panel,
+html[data-theme="dark"] .privacy-content,
+html[data-theme="dark"] .market-search,
+html[data-theme="dark"] .refresh-button,
+html[data-theme="dark"] .converter-field,
+html[data-theme="dark"] .converter-result,
+html[data-theme="dark"] .contact-detail,
+html[data-theme="dark"] .theme-toggle,
+html[data-theme="dark"] .market-see-more,
+html[data-theme="dark"] .table-convert-button {
+  color: var(--foreground);
+}
+
+html[data-theme="dark"] .rates-nav a,
+html[data-theme="dark"] .rates-nav a:hover,
+html[data-theme="dark"] .rates-hero-copy > p,
+html[data-theme="dark"] .rates-hero-side,
+html[data-theme="dark"] .converter-intro p,
+html[data-theme="dark"] .converter-field input,
+html[data-theme="dark"] .converter-field select,
+html[data-theme="dark"] .converter-field .converter-currency,
+html[data-theme="dark"] .converter-result small,
+html[data-theme="dark"] .market-search input,
+html[data-theme="dark"] .market-status,
+html[data-theme="dark"] .market-table-head,
+html[data-theme="dark"] .market-asset small,
+html[data-theme="dark"] .market-price small,
+html[data-theme="dark"] .market-change,
+html[data-theme="dark"] .market-empty,
+html[data-theme="dark"] .market-disclaimer,
+html[data-theme="dark"] .contact-intro p,
+html[data-theme="dark"] .contact-detail small,
+html[data-theme="dark"] .rates-footer,
+html[data-theme="dark"] .rates-footer-links a,
+html[data-theme="dark"] .privacy-heading p,
+html[data-theme="dark"] .privacy-section p,
+html[data-theme="dark"] .privacy-section li,
+html[data-theme="dark"] .privacy-section a {
+  color: var(--panel-subtle);
+}
+
+html[data-theme="dark"] .rates-hero h1,
+html[data-theme="dark"] .converter-intro h2,
+html[data-theme="dark"] .market-panel-header h2,
+html[data-theme="dark"] .contact-intro h2,
+html[data-theme="dark"] .privacy-heading h1,
+html[data-theme="dark"] .privacy-section h2,
+html[data-theme="dark"] .market-asset strong,
+html[data-theme="dark"] .market-price,
+html[data-theme="dark"] .contact-detail strong {
+  color: var(--panel-text);
+}
+
+html[data-theme="dark"] .rates-nav .rates-nav-active,
+html[data-theme="dark"] .rates-nav a:hover {
+  color: var(--brand);
+}
+
+html[data-theme="dark"] .rates-hero {
+  background:
+    radial-gradient(ellipse at 87% 35%, rgba(125, 156, 255, .18), transparent 35%),
+    linear-gradient(112deg, #0e1729 0%, #101e34 100%);
+  border-color: var(--line);
+}
+
+html[data-theme="dark"] .rates-hero h1,
+html[data-theme="dark"] .rates-hero-copy > p,
+html[data-theme="dark"] .rates-hero-side {
+  color: var(--hero-text);
+}
+
+html[data-theme="dark"] .rates-live-label,
+html[data-theme="dark"] .theme-toggle,
+html[data-theme="dark"] .refresh-button,
+html[data-theme="dark"] .table-convert-button,
+html[data-theme="dark"] .market-see-more {
+  background: var(--surface-strong);
+}
+
+html[data-theme="dark"] .rates-live-label,
+html[data-theme="dark"] .refresh-button,
+html[data-theme="dark"] .theme-toggle,
+html[data-theme="dark"] .table-convert-button,
+html[data-theme="dark"] .market-see-more,
+html[data-theme="dark"] .converter-field,
+html[data-theme="dark"] .converter-result {
+  border-color: var(--line);
+}
+
+html[data-theme="dark"] .converter-field {
+  background: var(--surface-strong);
+}
+
+html[data-theme="dark"] .converter-field:focus-within {
+  border-color: rgba(125, 156, 255, .9);
+  box-shadow: 0 0 0 3px rgba(125, 156, 255, .14);
+}
+
+html[data-theme="dark"] .converter-field input,
+html[data-theme="dark"] .converter-field select,
+html[data-theme="dark"] .market-search input {
+  color: var(--foreground);
+}
+
+html[data-theme="dark"] .converter-result {
+  background: var(--surface-soft);
+}
+
+html[data-theme="dark"] .converter-result strong { color: var(--brand-dark); }
+
+html[data-theme="dark"] .market-search {
+  background: var(--surface-strong);
+}
+
+html[data-theme="dark"] .market-table { border-top-color: var(--line); }
+html[data-theme="dark"] .market-price { color: var(--panel-text); }
+html[data-theme="dark"] .market-status .status-dot { background: var(--line); }
+html[data-theme="dark"] .market-asset strong { color: var(--foreground); }
+html[data-theme="dark"] .market-asset small { color: var(--muted); }
+html[data-theme="dark"] .market-price small { color: var(--muted); }
+html[data-theme="dark"] .rates-footer-links a:hover { color: var(--brand); }
+html[data-theme="dark"] .privacy-section a { color: var(--brand-dark); }
+html[data-theme="dark"] .back-to-top {
+  border-color: rgba(255, 255, 255, .12);
 }
 
 .converter-panel {

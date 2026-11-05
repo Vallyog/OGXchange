@@ -73,6 +73,22 @@ function isMarketAssetSymbol(
   return marketAssets.some((asset) => asset.symbol === value);
 }
 
+function getInitialTheme(): "light" | "dark" {
+  if (typeof window === "undefined") {
+    return "light";
+  }
+
+  const savedTheme = localStorage.getItem("ogxchange-theme");
+
+  if (savedTheme === "dark" || savedTheme === "light") {
+    return savedTheme;
+  }
+
+  return window.matchMedia("(prefers-color-scheme: dark)").matches
+    ? "dark"
+    : "light";
+}
+
 export default function MarketDashboard() {
   const [market, setMarket] = useState<MarketRatesResponse | null>(null);
   const [amount, setAmount] = useState("1");
@@ -86,6 +102,16 @@ export default function MarketDashboard() {
   const [isLoading, setIsLoading] = useState(true);
   const [isRefreshing, setIsRefreshing] = useState(false);
   const [error, setError] = useState("");
+  const [theme, setTheme] = useState<"light" | "dark">(() => getInitialTheme());
+
+  useEffect(() => {
+    document.documentElement.setAttribute("data-theme", theme);
+    localStorage.setItem("ogxchange-theme", theme);
+  }, [theme]);
+
+  const toggleTheme = () => {
+    setTheme((currentTheme) => (currentTheme === "dark" ? "light" : "dark"));
+  };
 
   const refreshRates = useCallback(async () => {
     setIsRefreshing(true);
@@ -181,11 +207,23 @@ export default function MarketDashboard() {
         <nav className="rates-nav" aria-label="Main navigation">
           <a className="rates-nav-active" href="#rates">Rates</a>
           <a href="#converter">Convert</a>
-          
         </nav>
-        <a className="rates-live-label" href="#contact">
-          Contact Us
-        </a>
+        <div className="rates-header-actions">
+          <button
+            type="button"
+            className="theme-toggle"
+            onClick={toggleTheme}
+            aria-label={theme === "dark" ? "Switch to light mode" : "Switch to dark mode"}
+            aria-pressed={theme === "dark"}
+            title={theme === "dark" ? "Switch to light mode" : "Switch to dark mode"}
+          >
+            <span aria-hidden="true">{theme === "dark" ? "☀" : "☾"}</span>
+            <span>{theme === "dark" ? "Light" : "Dark"}</span>
+          </button>
+          <a className="rates-live-label" href="#contact">
+            Contact Us
+          </a>
+        </div>
       </header>
 
       <section className="rates-hero">
