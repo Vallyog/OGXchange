@@ -197,6 +197,11 @@ export default function MarketDashboard() {
         ? `Hello, i want to sell ${formatCrypto(parsedAmount, selectedSymbol)}. are you active?`
         : `Hello, i want to buy ${formatNaira(parsedAmount)} worth of ${selectedSymbol}, are you active?`
       : null;
+  const tradeUrl = tradeMessage
+    ? `https://wa.me/2347036212091?text=${encodeURIComponent(tradeMessage)}`
+    : null;
+  const tradeButtonLabel =
+    conversionDirection === "crypto-to-naira" ? `Sell ${selectedSymbol}` : "Buy crypto";
 
   return (
     <main className="rates-page" id="top">
@@ -306,24 +311,24 @@ export default function MarketDashboard() {
             <span>{conversionDirection === "crypto-to-naira" ? "Naira value" : "Crypto value"}</span>
             <strong>{convertedAmount}</strong>
             <small>{rateDescription}</small>
-            <button
-              className="converter-trade-button"
-              type="button"
-              disabled={!tradeMessage}
-              onClick={() => {
-                if (!tradeMessage) {
-                  return;
-                }
-
-                window.open(
-                  `https://wa.me/2347036212091?text=${encodeURIComponent(tradeMessage)}`,
-                  "_blank",
-                  "noopener,noreferrer",
-                );
-              }}
-            >
-              {conversionDirection === "crypto-to-naira" ? `Sell ${selectedSymbol}` : "Buy crypto"}
-            </button>
+            {tradeUrl ? (
+              <a
+                className="converter-trade-button"
+                href={tradeUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                {tradeButtonLabel}
+              </a>
+            ) : (
+              <button
+                className="converter-trade-button"
+                type="button"
+                disabled
+              >
+                {tradeButtonLabel}
+              </button>
+            )}
           </div>
         </div>
       </section>
