@@ -195,7 +195,7 @@ export default function MarketDashboard() {
     selectedRate && Number.isFinite(parsedAmount) && parsedAmount > 0
       ? conversionDirection === "crypto-to-naira"
         ? `Hello, i want to sell ${formatCrypto(parsedAmount, selectedSymbol)}. are you active?`
-        : `Hello, i want to buy ${formatNaira(parsedAmount)} worth of crypto, are you active?`
+        : `Hello, i want to buy ${formatNaira(parsedAmount)} worth of ${selectedSymbol}, are you active?`
       : null;
 
   return (
