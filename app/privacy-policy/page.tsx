@@ -57,11 +57,7 @@ export default function PrivacyPolicyPage() {
               address, browser details, requested pages, and access time to
               deliver and protect the website.
             </li>
-            <li>
-              When you load or refresh rates, our server requests market
-              reference data from CoinGecko. The rate endpoint does not send
-              your calculator amount or other form input to CoinGecko.
-            </li>
+
             <li>
               If authentication services are configured for the site, essential
               session data may be processed to validate a sign-in session. The
