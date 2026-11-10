@@ -102,7 +102,7 @@ export default function PrivacyPolicyPage() {
           <h2>Service providers and external links</h2>
           <p>
             We rely on hosting and infrastructure providers to operate this
-            website and CoinGecko to supply market reference data. The site
+            website and supply market reference data. The site
             also links to external contact services. Those providers and
             services process information under their own terms and privacy
             policies; Ogxchange does not control their independent practices.
