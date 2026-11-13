@@ -68,7 +68,21 @@ button:focus-visible, a:focus-visible, input:focus-visible, select:focus-visible
   display: flex;
   align-items: center;
   justify-content: space-between;
+  position: relative;
+  isolation: isolate;
+  background: var(--surface);
+}
+.rates-header::before {
+  position: absolute;
+  z-index: -1;
+  top: 0;
+  bottom: 0;
+  left: 50%;
+  width: 100vw;
   border-bottom: 1px solid var(--line);
+  background: var(--surface);
+  content: "";
+  transform: translateX(-50%);
 }
 .rates-header-actions {
   display: flex;
@@ -94,6 +108,9 @@ button:focus-visible, a:focus-visible, input:focus-visible, select:focus-visible
 .theme-toggle span:first-child { font-size: 14px; }
 .rates-brand { display: inline-flex; align-items: center; }
 .rates-brand img { display: block; width: 144px; height: auto; }
+.rates-brand .rates-brand-logo-dark { display: none; }
+html[data-theme="dark"] .rates-brand .rates-brand-logo-light { display: none; }
+html[data-theme="dark"] .rates-brand .rates-brand-logo-dark { display: block; }
 .rates-nav { display: flex; align-items: center; gap: 34px; color: #68748e; font-size: 13px; }
 .rates-nav a { transition: color .18s ease; }
 .rates-nav a:hover, .rates-nav .rates-nav-active { color: var(--brand); }
@@ -144,7 +161,6 @@ button:focus-visible, a:focus-visible, input:focus-visible, select:focus-visible
   color: #1d2d55;
   font-size: clamp(42px, 5.2vw, 62px);
   font-weight: 520;
-  line-height: .99;
   letter-spacing: -.065em;
 }
 .rates-hero h1 span { color: var(--brand); }
@@ -178,6 +194,7 @@ html[data-theme="dark"] .market-panel,
 html[data-theme="dark"] .market-search,
 html[data-theme="dark"] .refresh-button,
 html[data-theme="dark"] .converter-field,
+html[data-theme="dark"] .converter-asset-field,
 html[data-theme="dark"] .converter-result,
 html[data-theme="dark"] .contact-panel,
 html[data-theme="dark"] .contact-detail,
@@ -200,6 +217,7 @@ html[data-theme="dark"] .privacy-content,
 html[data-theme="dark"] .market-search,
 html[data-theme="dark"] .refresh-button,
 html[data-theme="dark"] .converter-field,
+html[data-theme="dark"] .converter-asset-field,
 html[data-theme="dark"] .converter-result,
 html[data-theme="dark"] .contact-detail,
 html[data-theme="dark"] .theme-toggle,
@@ -213,16 +231,18 @@ html[data-theme="dark"] .rates-nav a:hover,
 html[data-theme="dark"] .rates-hero-copy > p,
 html[data-theme="dark"] .rates-hero-side,
 html[data-theme="dark"] .converter-intro p,
+html[data-theme="dark"] .converter-asset-picker > span,
 html[data-theme="dark"] .converter-field input,
-html[data-theme="dark"] .converter-field select,
+html[data-theme="dark"] .converter-asset-field select,
 html[data-theme="dark"] .converter-field .converter-currency,
+html[data-theme="dark"] .converter-select-chevron,
 html[data-theme="dark"] .converter-result small,
 html[data-theme="dark"] .market-search input,
 html[data-theme="dark"] .market-status,
 html[data-theme="dark"] .market-table-head,
 html[data-theme="dark"] .market-asset small,
 html[data-theme="dark"] .market-price small,
-html[data-theme="dark"] .market-change,
+html[data-theme="dark"] .market-change.change-unavailable,
 html[data-theme="dark"] .market-empty,
 html[data-theme="dark"] .market-disclaimer,
 html[data-theme="dark"] .contact-intro p,
@@ -280,21 +300,24 @@ html[data-theme="dark"] .theme-toggle,
 html[data-theme="dark"] .table-convert-button,
 html[data-theme="dark"] .market-see-more,
 html[data-theme="dark"] .converter-field,
+html[data-theme="dark"] .converter-asset-field,
 html[data-theme="dark"] .converter-result {
   border-color: var(--line);
 }
 
-html[data-theme="dark"] .converter-field {
+html[data-theme="dark"] .converter-field,
+html[data-theme="dark"] .converter-asset-field {
   background: var(--surface-strong);
 }
 
-html[data-theme="dark"] .converter-field:focus-within {
+html[data-theme="dark"] .converter-field:focus-within,
+html[data-theme="dark"] .converter-asset-field:focus-within {
   border-color: rgba(125, 156, 255, .9);
   box-shadow: 0 0 0 3px rgba(125, 156, 255, .14);
 }
 
 html[data-theme="dark"] .converter-field input,
-html[data-theme="dark"] .converter-field select,
+html[data-theme="dark"] .converter-asset-field select,
 html[data-theme="dark"] .market-search input {
   color: var(--foreground);
 }
@@ -341,8 +364,34 @@ html[data-theme="dark"] .back-to-top {
   letter-spacing: -.045em;
 }
 .converter-intro p { margin: 0; color: var(--muted); font-size: 12px; line-height: 1.65; }
-.converter-controls { display: grid; grid-template-columns: minmax(0, 1fr) 34px minmax(0, 1fr); gap: 12px; align-items: center; }
+.converter-workspace { min-width: 0; display: grid; grid-template-columns: minmax(0, 1fr) 34px minmax(0, 1fr); column-gap: 12px; row-gap: 14px; }
+.converter-asset-picker { grid-column: 1; width: 100%; display: grid; gap: 6px; }
+.converter-asset-picker > span { color: #68748e; font-size: 11px; font-weight: 600; }
+.converter-asset-field {
+  position: relative;
+  height: 46px;
+  border: 1px solid #e3e7f0;
+  border-radius: 8px;
+  background: #fbfcff;
+}
+.converter-asset-field:focus-within { border-color: #8299ff; box-shadow: 0 0 0 3px rgba(0,60,255,.08); }
+.converter-asset-field select {
+  width: 100%;
+  height: 100%;
+  appearance: none;
+  padding: 0 38px 0 13px;
+  border: 0;
+  outline: 0;
+  color: #253352;
+  background: transparent;
+  font-size: 13px;
+  font-weight: 650;
+  cursor: pointer;
+}
+.converter-select-chevron { position: absolute; top: 50%; right: 13px; color: #68748e; font-size: 17px; line-height: 1; pointer-events: none; transform: translateY(-55%); }
+.converter-controls { grid-column: 1 / -1; display: grid; grid-template-columns: minmax(0, 1fr) 34px minmax(0, 1fr); gap: 12px; align-items: start; }
 .converter-input, .converter-result { min-width: 0; }
+.converter-input { padding-top: 9px; }
 .converter-input > span, .converter-result > span { display: block; margin-bottom: 8px; color: #68748e; font-size: 11px; font-weight: 600; }
 .converter-field {
   height: 51px;
@@ -368,17 +417,15 @@ html[data-theme="dark"] .back-to-top {
 }
 .converter-field input::-webkit-inner-spin-button, .converter-field input::-webkit-outer-spin-button { appearance: none; margin: 0; }
 .converter-field input[type=number] { appearance: textfield; }
-.converter-field select { border: 0; outline: 0; color: #3d4d7b; background: transparent; font-size: 12px; font-weight: 700; cursor: pointer; }
 .converter-currency { flex: 0 0 auto; color: #3d4d7b; font-size: 11px; font-weight: 700; white-space: nowrap; }
 .converter-swap {
-  position: relative;
-  top: 20px;
   width: 34px;
   height: 34px;
   display: grid;
-  place-self: center;
+  align-self: start;
+  justify-self: center;
   place-items: center;
-  margin-top: 24px;
+  margin-top: 42px;
   border: 1px solid #e1e6f3;
   border-radius: 50%;
   color: #2848bb;
@@ -397,6 +444,13 @@ html[data-theme="dark"] .back-to-top {
 }
 .converter-result > span { margin-bottom: 4px; }
 .converter-result strong { display: block; overflow: hidden; color: var(--brand-dark); font-size: 20px; font-weight: 650; letter-spacing: -.035em; text-overflow: ellipsis; white-space: nowrap; }
+.converter-editable-value { min-width: 0; display: flex; align-items: baseline; gap: 6px; overflow: hidden; color: var(--brand-dark); font-size: 20px; font-weight: 650; letter-spacing: -.035em; }
+.converter-editable-value.is-naira { font-size: 15px; }
+.converter-editable-value input { flex: 1 1 auto; width: 100%; min-width: 0; padding: 0 0 1px; border: 0; border-bottom: 1px dashed var(--line); border-radius: 0; color: inherit; background: transparent; font: inherit; }
+.converter-editable-value input::-webkit-inner-spin-button, .converter-editable-value input::-webkit-outer-spin-button { appearance: none; margin: 0; }
+.converter-editable-value input[type=number] { appearance: textfield; }
+.converter-editable-value input:focus-visible { border-bottom-style: solid; border-bottom-color: var(--brand); }
+.converter-editable-value span { flex: 0 0 auto; }
 .converter-result small { display: block; margin-top: 3px; overflow: hidden; color: #8390a6; font-size: 9px; text-overflow: ellipsis; white-space: nowrap; }
 .converter-trade-button {
   width: 100%;
@@ -492,7 +546,10 @@ html[data-theme="dark"] .back-to-top {
 .market-change { text-align: right; font-size: 11px; font-weight: 650; }
 .change-up { color: #16835d; }
 .change-down { color: #c25454; }
+.change-neutral { color: var(--foreground); }
 .change-unavailable { color: #909bb0; }
+html[data-theme="dark"] .market-change.change-up { color: #5bd397; }
+html[data-theme="dark"] .market-change.change-down { color: #ff8585; }
 .table-convert-button {
   justify-self: end;
   min-width: 79px;
@@ -633,14 +690,16 @@ html[data-theme="dark"] .back-to-top {
   .contact-panel { gap: 17px; margin-top: 16px; padding: 20px 17px; }
   .contact-details { grid-template-columns: 1fr; gap: 8px; }
   .contact-detail { padding: 11px; }
+  .converter-workspace { grid-template-columns: minmax(0, 1fr) 30px minmax(0, 1fr); column-gap: 7px; }
   .converter-controls { grid-template-columns: minmax(0, 1fr) 30px minmax(0, 1fr); gap: 7px; }
   .converter-field { gap: 5px; padding: 0 9px; }
   .converter-field input { font-size: 15px; }
-  .converter-field select { font-size: 10px; }
   .converter-currency { font-size: 9px; }
-  .converter-swap { width: 30px; height: 30px; margin-top: 24px; }
+  .converter-swap { width: 30px; height: 30px; margin-top: 44px; }
   .converter-result { padding: 9px; }
   .converter-result strong { font-size: 16px; }
+  .converter-editable-value { font-size: 16px; }
+  .converter-editable-value.is-naira { font-size: 13px; }
   .market-panel { margin-top: 16px; padding: 21px 16px 16px; }
   .market-panel-header { align-items: flex-start; flex-direction: column; gap: 15px; margin-bottom: 15px; }
   .market-panel-header h2 { font-size: 21px; }

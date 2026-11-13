@@ -92,6 +92,7 @@ function getInitialTheme(): "light" | "dark" {
 export default function MarketDashboard() {
   const [market, setMarket] = useState<MarketRatesResponse | null>(null);
   const [amount, setAmount] = useState("1");
+  const [resultValueDraft, setResultValueDraft] = useState<string | null>(null);
   const [conversionDirection, setConversionDirection] = useState<
     "crypto-to-naira" | "naira-to-crypto"
   >("crypto-to-naira");
@@ -176,16 +177,29 @@ export default function MarketDashboard() {
     (rate) => rate.symbol === selectedSymbol,
   );
   const parsedAmount = Number(amount);
-  const convertedAmount =
+  const nairaToCryptoFactor =
+    1 - NAIRA_TO_CRYPTO_DISCOUNT_PERCENT / 100;
+  const convertedNairaAmount =
     selectedRate && Number.isFinite(parsedAmount) && parsedAmount > 0
-      ? conversionDirection === "crypto-to-naira"
-        ? formatNaira(parsedAmount * selectedRate.priceNgn)
-        : formatCrypto(
-            (parsedAmount / selectedRate.marketPriceNgn) *
-              (1 - NAIRA_TO_CRYPTO_DISCOUNT_PERCENT / 100),
-            selectedSymbol,
-          )
-      : "—";
+      ? parsedAmount * selectedRate.priceNgn
+      : null;
+  const convertedCryptoAmount =
+    selectedRate && Number.isFinite(parsedAmount) && parsedAmount > 0
+      ? (parsedAmount / selectedRate.marketPriceNgn) * nairaToCryptoFactor
+      : null;
+  const resultValue =
+    conversionDirection === "crypto-to-naira"
+      ? convertedNairaAmount
+      : convertedCryptoAmount;
+  const resultValueInput =
+    resultValueDraft ??
+    (resultValue === null
+      ? ""
+      : String(Number(resultValue.toFixed(
+          conversionDirection === "crypto-to-naira"
+            ? 2
+            : selectedSymbol === "BTC" ? 8 : 6,
+        ))));
   const rateDescription = selectedRate
     ? conversionDirection === "crypto-to-naira"
       ? `Rate: ${formatNaira(selectedRate.priceNgn)} / ${selectedSymbol}`
@@ -201,7 +215,7 @@ export default function MarketDashboard() {
     ? `https://wa.me/2347036212091?text=${encodeURIComponent(tradeMessage)}`
     : null;
   const tradeButtonLabel =
-    conversionDirection === "crypto-to-naira" ? `Sell ${selectedSymbol}` : "Buy crypto";
+    conversionDirection === "crypto-to-naira" ? `Sell ${selectedSymbol}` : `Buy ${selectedSymbol}`;
 
   return (
     <main className="rates-page" id="top">
@@ -213,6 +227,15 @@ export default function MarketDashboard() {
             width={635}
             height={187}
             priority
+            className="rates-brand-logo-light"
+          />
+          <Image
+            src="/ogxchange-logo-dark.png"
+            alt=""
+            aria-hidden="true"
+            width={635}
+            height={187}
+            className="rates-brand-logo-dark"
           />
         </Link>
         <nav className="rates-nav" aria-label="Main navigation">
@@ -253,82 +276,132 @@ export default function MarketDashboard() {
         <div className="converter-intro">
           <span className="panel-kicker">QUICK CONVERT</span>
           <h2 id="converter-title">What’s it worth?</h2>
-          <p>Confirm current rate here before giving us a call.</p>
+          <p>Confirm current rate here before giving us a call/text.</p>
         </div>
-        <div className="converter-controls">
-          <label className="converter-input">
-            <span>{conversionDirection === "crypto-to-naira" ? "Crypto amount" : "Naira amount"}</span>
-            <div className="converter-field">
-              <input
-                type="number"
-                min="0"
-                step="any"
-                inputMode="decimal"
-                value={amount}
-                onChange={(event) => setAmount(event.target.value)}
-                aria-label={conversionDirection === "crypto-to-naira" ? "Crypto amount to convert" : "Naira amount to convert"}
-              />
-              {conversionDirection === "naira-to-crypto" && (
-                <span className="converter-currency">₦ NGN</span>
-              )}
+        <div className="converter-workspace">
+          <label className="converter-asset-picker">
+            <span>Crypto asset</span>
+            <div className="converter-asset-field">
               <select
                 value={selectedSymbol}
                 onChange={(event) => {
                   if (isMarketAssetSymbol(event.target.value)) {
+                    setResultValueDraft(null);
                     setSelectedSymbol(event.target.value);
                   }
                 }}
-                aria-label="Crypto asset"
               >
                 {marketAssets.map((asset) => (
                   <option value={asset.symbol} key={asset.symbol}>
-                    {asset.symbol}
+                    {asset.symbol} · {asset.name}
                   </option>
                 ))}
               </select>
+              <span className="converter-select-chevron" aria-hidden="true">⌄</span>
             </div>
           </label>
-          <button
-            className="converter-swap"
-            type="button"
-            onClick={() =>
-              setConversionDirection((direction) =>
-                direction === "crypto-to-naira"
-                  ? "naira-to-crypto"
-                  : "crypto-to-naira",
-              )
-            }
-            aria-label={
-              conversionDirection === "crypto-to-naira"
-                ? "Switch to naira-to-crypto conversion"
-                : "Switch to crypto-to-naira conversion"
-            }
-            title="Switch conversion direction"
-          >
-            ⇄
-          </button>
-          <div className="converter-result" aria-live="polite">
-            <span>{conversionDirection === "crypto-to-naira" ? "Naira value" : "Crypto value"}</span>
-            <strong>{convertedAmount}</strong>
-            <small>{rateDescription}</small>
-            {tradeUrl ? (
-              <a
-                className="converter-trade-button"
-                href={tradeUrl}
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                {tradeButtonLabel}
-              </a>
-            ) : (
-              <button
-                className="converter-trade-button"
-                type="button"
-                disabled
-              >
-                {tradeButtonLabel}
-              </button>
-            )}
+          <div className="converter-controls">
+            <label className="converter-input">
+              <span>{conversionDirection === "crypto-to-naira" ? "Crypto amount" : "Naira amount"}</span>
+              <div className="converter-field">
+                <input
+                  type="number"
+                  min="0"
+                  step="any"
+                  inputMode="decimal"
+                  value={amount}
+                  onChange={(event) => {
+                    setResultValueDraft(null);
+                    setAmount(event.target.value);
+                  }}
+                  aria-label={conversionDirection === "crypto-to-naira" ? "Crypto amount to convert" : "Naira amount to convert"}
+                />
+                {conversionDirection === "naira-to-crypto" && (
+                  <span className="converter-currency">₦ NGN</span>
+                )}
+              </div>
+            </label>
+            <button
+              className="converter-swap"
+              type="button"
+              onClick={() =>
+                {
+                  setResultValueDraft(null);
+                  setConversionDirection((direction) =>
+                    direction === "crypto-to-naira"
+                      ? "naira-to-crypto"
+                      : "crypto-to-naira",
+                  );
+                }
+              }
+              aria-label={
+                conversionDirection === "crypto-to-naira"
+                  ? "Switch to naira-to-crypto conversion"
+                  : "Switch to crypto-to-naira conversion"
+              }
+              title="Switch conversion direction"
+            >
+              ⇄
+            </button>
+            <div className="converter-result" aria-live="polite">
+              <span>{conversionDirection === "crypto-to-naira" ? "Naira value" : "Crypto value"}</span>
+              <div className={`converter-editable-value${conversionDirection === "crypto-to-naira" ? " is-naira" : ""}`}>
+                <input
+                  type="number"
+                  min="0"
+                  step="any"
+                  inputMode="decimal"
+                  value={resultValueInput}
+                  placeholder="—"
+                  disabled={!selectedRate}
+                  onChange={(event) => {
+                    const value = event.currentTarget.value;
+                    setResultValueDraft(value);
+                    if (value === "") {
+                      setAmount("");
+                      return;
+                    }
+
+                    const outputAmount = Number(value);
+                    if (!selectedRate || !Number.isFinite(outputAmount) || outputAmount < 0) {
+                      return;
+                    }
+
+                    setAmount(String(
+                      conversionDirection === "crypto-to-naira"
+                        ? outputAmount / selectedRate.priceNgn
+                        : (outputAmount * selectedRate.marketPriceNgn) / nairaToCryptoFactor,
+                    ));
+                  }}
+                  onBlur={() => setResultValueDraft(null)}
+                  aria-label={
+                    conversionDirection === "crypto-to-naira"
+                      ? "Naira value in NGN"
+                      : `Crypto value in ${selectedSymbol}`
+                  }
+                />
+                <span>{conversionDirection === "crypto-to-naira" ? "₦" : selectedSymbol}</span>
+              </div>
+              <small>{rateDescription}</small>
+              {tradeUrl ? (
+                <a
+                  className="converter-trade-button"
+                  href={tradeUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  {tradeButtonLabel}
+                </a>
+              ) : (
+                <button
+                  className="converter-trade-button"
+                  type="button"
+                  disabled
+                >
+                  {tradeButtonLabel}
+                </button>
+              )}
+            </div>
           </div>
         </div>
       </section>
@@ -398,7 +471,7 @@ export default function MarketDashboard() {
                 <small>per {rate.symbol}</small>
               </strong>
               <span
-                className={`market-change ${rate.change24h === null ? "change-unavailable" : rate.change24h < 0 ? "change-down" : "change-up"}`}
+                className={`market-change ${rate.change24h === null ? "change-unavailable" : rate.change24h < 0 ? "change-down" : rate.change24h > 0 ? "change-up" : "change-neutral"}`}
                 role="cell"
               >
                 {rate.change24h === null
