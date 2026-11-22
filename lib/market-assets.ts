@@ -1,5 +1,5 @@
-export const MARKET_RATE_DISCOUNT_PERCENT = 3.33;
-export const NAIRA_TO_CRYPTO_DISCOUNT_PERCENT = 3.5;
+export const SELL_RATE_NGN_OFFSET = -40;
+export const BUY_RATE_NGN_OFFSET = 40;
 
 export const marketAssets = [
   {
