@@ -4,7 +4,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import {
-  NAIRA_TO_CRYPTO_DISCOUNT_PERCENT,
+  NAIRA_TO_CRYPTO_PREMIUM_PERCENT,
   marketAssets,
   type MarketRatesResponse,
 } from "@/lib/market-assets";
@@ -178,14 +178,14 @@ export default function MarketDashboard() {
   );
   const parsedAmount = Number(amount);
   const nairaToCryptoFactor =
-    1 - NAIRA_TO_CRYPTO_DISCOUNT_PERCENT / 100;
+    1 + NAIRA_TO_CRYPTO_PREMIUM_PERCENT / 100;
   const convertedNairaAmount =
     selectedRate && Number.isFinite(parsedAmount) && parsedAmount > 0
       ? parsedAmount * selectedRate.priceNgn
       : null;
   const convertedCryptoAmount =
     selectedRate && Number.isFinite(parsedAmount) && parsedAmount > 0
-      ? (parsedAmount / selectedRate.marketPriceNgn) * nairaToCryptoFactor
+      ? parsedAmount / (selectedRate.marketPriceNgn * nairaToCryptoFactor)
       : null;
   const resultValue =
     conversionDirection === "crypto-to-naira"
@@ -370,7 +370,7 @@ export default function MarketDashboard() {
                     setAmount(String(
                       conversionDirection === "crypto-to-naira"
                         ? outputAmount / selectedRate.priceNgn
-                        : (outputAmount * selectedRate.marketPriceNgn) / nairaToCryptoFactor,
+                        : outputAmount * selectedRate.marketPriceNgn * nairaToCryptoFactor,
                     ));
                   }}
                   onBlur={() => setResultValueDraft(null)}
