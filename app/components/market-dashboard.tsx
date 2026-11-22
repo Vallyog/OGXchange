@@ -4,7 +4,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import {
-  BUY_RATE_NGN_OFFSET,
+  NAIRA_TO_CRYPTO_DISCOUNT_PERCENT,
   marketAssets,
   type MarketRatesResponse,
 } from "@/lib/market-assets";
@@ -177,17 +177,15 @@ export default function MarketDashboard() {
     (rate) => rate.symbol === selectedSymbol,
   );
   const parsedAmount = Number(amount);
-  const buyingRateNgn =
-    selectedRate
-      ? selectedRate.marketPriceNgn + BUY_RATE_NGN_OFFSET
-      : null;
+  const nairaToCryptoFactor =
+    1 - NAIRA_TO_CRYPTO_DISCOUNT_PERCENT / 100;
   const convertedNairaAmount =
     selectedRate && Number.isFinite(parsedAmount) && parsedAmount > 0
       ? parsedAmount * selectedRate.priceNgn
       : null;
   const convertedCryptoAmount =
-    buyingRateNgn !== null && Number.isFinite(parsedAmount) && parsedAmount > 0
-      ? parsedAmount / buyingRateNgn
+    selectedRate && Number.isFinite(parsedAmount) && parsedAmount > 0
+      ? (parsedAmount / selectedRate.marketPriceNgn) * nairaToCryptoFactor
       : null;
   const resultValue =
     conversionDirection === "crypto-to-naira"
@@ -205,7 +203,7 @@ export default function MarketDashboard() {
   const rateDescription = selectedRate
     ? conversionDirection === "crypto-to-naira"
       ? `Rate: ${formatNaira(selectedRate.priceNgn)} / ${selectedSymbol}`
-      : `Rate: ${formatNaira(selectedRate.marketPriceNgn + BUY_RATE_NGN_OFFSET)} / ${selectedSymbol}`
+      : `Market reference: ${formatNaira(selectedRate.marketPriceNgn)} / ${selectedSymbol}`
     : "Waiting for live rate";
   const tradeMessage =
     selectedRate && Number.isFinite(parsedAmount) && parsedAmount > 0
@@ -372,7 +370,7 @@ export default function MarketDashboard() {
                     setAmount(String(
                       conversionDirection === "crypto-to-naira"
                         ? outputAmount / selectedRate.priceNgn
-                        : outputAmount * (selectedRate.marketPriceNgn + BUY_RATE_NGN_OFFSET),
+                        : (outputAmount * selectedRate.marketPriceNgn) / nairaToCryptoFactor,
                     ));
                   }}
                   onBlur={() => setResultValueDraft(null)}

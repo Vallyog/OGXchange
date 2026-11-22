@@ -1,6 +1,6 @@
 import { connection } from "next/server";
 import {
-  SELL_RATE_NGN_OFFSET,
+  MARKET_RATE_DISCOUNT_PERCENT,
   marketAssets,
   type MarketRate,
 } from "@/lib/market-assets";
@@ -57,7 +57,7 @@ export async function GET() {
         mark: asset.mark,
         tone: asset.tone,
         marketPriceNgn: priceNgn,
-        priceNgn: priceNgn + SELL_RATE_NGN_OFFSET,
+        priceNgn: priceNgn * (1 - MARKET_RATE_DISCOUNT_PERCENT / 100),
         change24h:
           typeof change24h === "number" && Number.isFinite(change24h)
             ? change24h
